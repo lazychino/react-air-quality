@@ -11,21 +11,48 @@ const getAirQualityData = (zip) =>
 
 export default function App() {
   const [zipcode, setZipCode] = useState('10001');
-  const [data, setData] = useState('');
+  const [location, setLocation] = useState('');
+  const [data, setData] = useState([]);
+
+  const updateZip = (event) => {
+    setZipCode(event.target.value);
+  };
 
   useEffect(() => {
-    getAirQualityData(zipcode).then((response) => {
-      setData(JSON.stringify(response));
-      console.log(response);
-    });
+    getAirQualityData(zipcode)
+      .then((response) => {
+        setData(response);
+        setLocation(response[0].ReportingArea);
+        console.log(response);
+      })
+      .catch((error) => {
+        setData([]);
+        setLocation('');
+      });
 
     return () => {};
   }, [zipcode]);
 
   return (
     <div>
-      
-      <pre>{data}</pre>
+      <input type="text" value={zipcode} onChange={updateZip} />
+      <h2>Air quality for: {location}</h2>
+      {data.map((forecast) => {
+        return <Forecast data={forecast} />;
+      })}
     </div>
   );
 }
+
+const Forecast = ({ data }) => {
+  return (
+    <div className={"forecast " + data.Category.Name.toLowerCase()}>
+      <div>Date: {data.DateForecast}</div>
+      <div>
+        {data.ParameterName} | AQI: {data.AQI} ({data.Category.Name})
+      </div>
+    </div>
+  );
+};
+
+// {"DateIssue":"2023-06-09 ","DateForecast":"2023-06-09 ","ReportingArea":"New York City Region","StateCode":"NY","Latitude":40.8419,"Longitude":-73.8359,"ParameterName":"O3","AQI":42,"Category":{"Number":1,"Name":"Good"},"ActionDay":false,"Discussion":""}
