@@ -5,16 +5,40 @@ p {
 }
 
 .forecast {
-  padding: 5px;
+  padding: 8px;
   margin: 3px;
   border-radius: 8px;
   max-width: fit-content;
+  background-color: rgb(238, 238, 238);
 }
 
-.forecast.good {
-  background-color: rgb(108, 194, 108);
+.parameter {
+  padding: 4px;
+  margin: 8px 0px 0px;
+  border-radius: 4px;
 }
 
-.forecast.moderate {
-  background-color: rgb(240, 240, 24);
+/* Good */
+.category-1 {
+  background-color: rgb(29, 181, 29);
+}
+/* Moderate */
+.category-2 {
+  background-color: yellow;
+}
+/* Unhealthy for Sensitive Groups */
+.category-3 {
+  background-color: orange;
+}
+/* Unhealthy */
+.category-4 {
+  background-color: red;
+}
+/* Very */
+.category-5 {
+  background-color: purple;
+}
+/* Hazardous */
+.category-6 {
+  background-color: maroon;
 }
