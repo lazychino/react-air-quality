@@ -4,13 +4,15 @@ import './style.css';
 
 const API_KEY = window.localStorage.getItem('airnow');
 
+const formatDate = (date) => new Intl.DateTimeFormat('en-US').format(date);
+
 const getAirQualityData = async (zip) => {
   const url = `https://www.airnowapi.org/aq/forecast/zipCode/?format=application/json&zipCode=${zip}&date=2023-06-09&distance=25&API_KEY=${API_KEY}`;
   const cacheKey = `airnow-forecast-${zip}`;
 
   let cacheResponse = JSON.parse(window.localStorage.getItem(cacheKey));
 
-  if (!cacheResponse) {
+  if (!cacheResponse || cacheResponse.DateIssue !== formatDate(Date.now())) {
     const response = await fetch(url);
     const data = await response.json();
 
@@ -22,7 +24,10 @@ const getAirQualityData = async (zip) => {
       ) {
         list[list.length - 1].params.push(forecast);
       } else {
-        const forecastDate = { date: forecast.DateForecast };
+        const forecastDate = {
+          date: forecast.DateForecast,
+          dateIssue: formatDate(Date.parse(forecast.DateIssue)),
+        };
         forecastDate.params = [forecast];
         list.push(forecastDate);
       }
